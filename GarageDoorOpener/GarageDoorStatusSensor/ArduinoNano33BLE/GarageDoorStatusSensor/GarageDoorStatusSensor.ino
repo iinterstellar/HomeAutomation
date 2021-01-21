@@ -4,8 +4,8 @@
  *            check the status of a reed switch to determine whether the garage door status is opened or closed
  */
 
-//#include <mbed.h>
-//#include <rtos.h>
+#include "HAL_GarageDoorStatusSensor.hpp"
+#include "HAL_LED_LightShow.hpp"
 
 #define DEBUG
 
@@ -14,6 +14,7 @@ namespace
 {
   using namespace std::chrono_literals;
   const rtos::Kernel::Clock::duration_u32 ONE_SECOND = 1000 * 1ms;
+  const rtos::Kernel::Clock::duration_u32 TWO_SECONDS = 1000 * 2ms;
   #ifdef DEBUG
     const char SLEEP_MSG_TEMPLATE[] = "Deep sleep allowed: %i\r\n";
   #endif
@@ -27,6 +28,22 @@ void setup() {
   #ifdef DEBUG
     Serial.begin(115200);
   #endif
+  auto& garageDoorSensor = GarageDoorSensor::getInstance();
+  auto& showmaster = LightShowController::getInstance();
+  const bool INIT_SUCCEEDED = garageDoorSensor.init_garageDoorStatusSensor();
+  while(!INIT_SUCCEEDED)
+  {
+    // Indicate error occurred in initialization
+    showmaster.errorShow();
+  }
+
+  while(INIT_SUCCEEDED)
+  {
+    // Smooth operation. Sit here for now
+    showmaster.starUpShow();
+  }
+
+  
 }
 
 /*! \fn       void loop()

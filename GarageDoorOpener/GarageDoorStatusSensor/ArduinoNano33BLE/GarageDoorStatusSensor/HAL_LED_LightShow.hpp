@@ -36,6 +36,18 @@ class LightShowController
      */
     void init_LEDs();
 
+    /*! \fn       void turnOnLED()
+     *  \brief    Turns on the specified LED
+     *  \param[in]    LED_name    LED name 
+     */
+    void turnOnLED(const LED_Driver::BoardLEDs LED_name);
+
+    /*! \fn       void turnOffLED()
+     *  \brief    Turns off the specified LED
+     *  \param[in]    LED_name    LED name 
+     */
+    void turnOffLED(const LED_Driver::BoardLEDs LED_name);
+
     /*! \fn       void starUpShow()
      *  \brief    Performs a startup LED light show
      *  \note     This function calls thread sleep for a total of 13 seconds before returning
@@ -47,6 +59,12 @@ class LightShowController
      *  \note     This function calls thread sleep for one second before returning
      */
     void errorShow();
+  
+  public:
+    const LED_Driver::BoardLEDs ERROR_LED = LED_Driver::BoardLEDs::LED_R;
+    const LED_Driver::BoardLEDs OPEN_LED = LED_Driver::BoardLEDs::LED_G;
+    const LED_Driver::BoardLEDs CLOSED_LED = LED_Driver::BoardLEDs::LED_B;
+    const LED_Driver::BoardLEDs POWER_LED = LED_Driver::BoardLEDs::LED_P;
 
   private:
     /*! \fn       LightShowController()

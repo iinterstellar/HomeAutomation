@@ -64,10 +64,16 @@ ReedSwitchDriver::ReedSwitchStatus ReedSwitchDriver::get_reedSwitchState(const i
       if(PIN_STATUS == HIGH)
       {
         current_state = ReedSwitchStatus::REEDSWITCH_OPENED;
+        #ifdef DEBUG_GARAGE_SENSOR
+          Serial.print("Reed switch driver: Pin was HIGH\n");
+        #endif
       }
       else if(PIN_STATUS == LOW)
       {
         current_state = ReedSwitchStatus::REEDSWITCH_CLOSED;
+        #ifdef DEBUG_GARAGE_SENSOR
+          Serial.print("Reed switch driver: Pin was LOW\n");
+        #endif
       }
       else
       {

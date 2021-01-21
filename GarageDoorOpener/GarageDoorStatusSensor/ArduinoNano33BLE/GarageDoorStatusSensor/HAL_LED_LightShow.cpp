@@ -8,11 +8,8 @@ namespace
 {
   using namespace std::chrono_literals;
   const rtos::Kernel::Clock::duration_u32 ONE_SECOND = 1000 * 1ms;
+  const rtos::Kernel::Clock::duration_u32 TWO_SECOND = 1000 * 2ms;
   const rtos::Kernel::Clock::duration_u32 STARTUPSHOW_DURATION = 10 * 1000 * 1ms;
-  const LED_Driver::BoardLEDs ERROR_LED = LED_Driver::BoardLEDs::LED_R;
-  const LED_Driver::BoardLEDs OPEN_LED = LED_Driver::BoardLEDs::LED_G;
-  const LED_Driver::BoardLEDs CLOSED_LED = LED_Driver::BoardLEDs::LED_B;
-  const LED_Driver::BoardLEDs POWER_LED = LED_Driver::BoardLEDs::LED_P;
 }
 
 LightShowController LightShowController::show_master;
@@ -29,6 +26,20 @@ void LightShowController::init_LEDs()
   m_mutex.unlock();
 }
 
+void LightShowController::turnOnLED(const LED_Driver::BoardLEDs LED_name)
+{
+  m_mutex.lock();
+  m_driver.turnOnLED(LED_name);
+  m_mutex.unlock();
+}
+
+void LightShowController::turnOffLED(const LED_Driver::BoardLEDs LED_name)
+{
+  m_mutex.lock();
+  m_driver.turnOffLED(LED_name);
+  m_mutex.unlock();
+}
+
 void LightShowController::starUpShow()
 {
   m_mutex.lock();
@@ -40,36 +51,38 @@ void LightShowController::starUpShow()
   rtos::ThisThread::sleep_for(ONE_SECOND);
 
   m_driver.turnOnLED(ERROR_LED);
+  m_driver.turnOffLED(OPEN_LED);
+  m_driver.turnOffLED(CLOSED_LED);
   rtos::ThisThread::sleep_for(ONE_SECOND);
 
   m_driver.turnOffLED(ERROR_LED);
   m_driver.turnOnLED(OPEN_LED);
-  rtos::ThisThread::sleep_for(ONE_SECOND);
-
-  m_driver.turnOffLED(OPEN_LED);
-  m_driver.turnOnLED(CLOSED_LED);
-  rtos::ThisThread::sleep_for(ONE_SECOND);
-
   m_driver.turnOffLED(CLOSED_LED);
+  rtos::ThisThread::sleep_for(ONE_SECOND);
+
   m_driver.turnOnLED(ERROR_LED);
-  rtos::ThisThread::sleep_for(ONE_SECOND);
-
   m_driver.turnOnLED(OPEN_LED);
+  m_driver.turnOffLED(CLOSED_LED);
   rtos::ThisThread::sleep_for(ONE_SECOND);
 
+  m_driver.turnOffLED(ERROR_LED);
+  m_driver.turnOffLED(OPEN_LED);
+  m_driver.turnOnLED(CLOSED_LED);
+  rtos::ThisThread::sleep_for(ONE_SECOND);
+
+  m_driver.turnOnLED(ERROR_LED);
+  m_driver.turnOffLED(OPEN_LED);
   m_driver.turnOnLED(CLOSED_LED);
   rtos::ThisThread::sleep_for(ONE_SECOND);
 
   m_driver.turnOffLED(ERROR_LED);
+  m_driver.turnOnLED(OPEN_LED);
+  m_driver.turnOnLED(CLOSED_LED);
   rtos::ThisThread::sleep_for(ONE_SECOND);
 
-  m_driver.turnOffLED(OPEN_LED);
-  rtos::ThisThread::sleep_for(ONE_SECOND);
-
-  m_driver.turnOffLED(CLOSED_LED);
-  rtos::ThisThread::sleep_for(ONE_SECOND);
-
-  m_driver.turnOnAllStatusLEDs();
+  m_driver.turnOnLED(ERROR_LED);
+  m_driver.turnOnLED(OPEN_LED);
+  m_driver.turnOnLED(CLOSED_LED);
   rtos::ThisThread::sleep_for(ONE_SECOND);
 
   m_driver.turnOffAllLEDs();

@@ -31,9 +31,15 @@ GarageDoorSensor::GarageDoorStatus GarageDoorSensor::get_status()
   {
     case ReedSwitchDriver::ReedSwitchStatus::REEDSWITCH_OPENED:
       current_state = GarageDoorStatus::GARAGE_OPENED;
+      #ifdef DEBUG_GARAGE_SENSOR
+        Serial.print("HAL Garage Sensor: Reed switch was OPENED == Garage Door Opened\n");
+      #endif
       break;
     case ReedSwitchDriver::ReedSwitchStatus::REEDSWITCH_CLOSED:
       current_state = GarageDoorStatus::GARAGE_CLOSED;
+      #ifdef DEBUG_GARAGE_SENSOR
+        Serial.print("HAL Garage Sensor: Reed switch was CLOSED == Garage Door Closed\n");
+      #endif
       break;
     default:
       break;

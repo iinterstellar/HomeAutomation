@@ -5,6 +5,17 @@
 #include "LED_Driver.hpp"
 #include <Arduino.h>             //digitalWrite(...)
 
+// Anonymous namespace for constants
+namespace
+{
+  // RGB LED's must be set high to turn off for arduino nano 33 BLE. See schematic
+  const auto TURN_ON = LOW;
+  const auto TURN_OFF = HIGH;
+  // Power LED is opposite
+  const auto TURN_ON_PWR = HIGH;
+  const auto TURN_OFF_PWR = LOW;
+}
+
 void LED_Driver::init_LEDs()
 {
   pinMode(LEDB, OUTPUT);
@@ -18,16 +29,16 @@ void LED_Driver::turnOnLED(const BoardLEDs LED_name)
   switch(LED_name)
   {
     case BoardLEDs::LED_B:
-      digitalWrite(LEDB, HIGH);
+      digitalWrite(LEDB, TURN_ON);
       break;
     case BoardLEDs::LED_G:
-      digitalWrite(LEDG, HIGH);
+      digitalWrite(LEDG, TURN_ON);
       break;
     case BoardLEDs::LED_R:
-      digitalWrite(LEDR, HIGH);
+      digitalWrite(LEDR, TURN_ON);
       break;
     case BoardLEDs::LED_P:
-      digitalWrite(LED_PWR, HIGH);
+      digitalWrite(LED_PWR, TURN_ON_PWR);
       break;
     default:
       break;
@@ -39,16 +50,16 @@ void LED_Driver::turnOffLED(const BoardLEDs LED_name)
   switch(LED_name)
   {
     case BoardLEDs::LED_B:
-      digitalWrite(LEDB, LOW);
+      digitalWrite(LEDB, TURN_OFF);
       break;
     case BoardLEDs::LED_G:
-      digitalWrite(LEDG, LOW);
+      digitalWrite(LEDG, TURN_OFF);
       break;
     case BoardLEDs::LED_R:
-      digitalWrite(LEDR, LOW);
+      digitalWrite(LEDR, TURN_OFF);
       break;
     case BoardLEDs::LED_P:
-      digitalWrite(LED_PWR, LOW);
+      digitalWrite(LED_PWR, TURN_OFF_PWR);
       break;
     default:
       break;
@@ -57,30 +68,30 @@ void LED_Driver::turnOffLED(const BoardLEDs LED_name)
 
 void LED_Driver::turnOnAllLEDs()
 {
-  digitalWrite(LEDB, HIGH);
-  digitalWrite(LEDG, HIGH);
-  digitalWrite(LEDR, HIGH);
-  digitalWrite(LED_PWR, HIGH);
+  digitalWrite(LEDB, TURN_ON);
+  digitalWrite(LEDG, TURN_ON);
+  digitalWrite(LEDR, TURN_ON);
+  digitalWrite(LED_PWR, TURN_ON_PWR);
 }
 
 void LED_Driver::turnOffAllLEDs()
 {
-  digitalWrite(LEDB, LOW);
-  digitalWrite(LEDG, LOW);
-  digitalWrite(LEDR, LOW);
-  digitalWrite(LED_PWR, LOW);
+  digitalWrite(LEDB, TURN_OFF);
+  digitalWrite(LEDG, TURN_OFF);
+  digitalWrite(LEDR, TURN_OFF);
+  digitalWrite(LED_PWR, TURN_OFF_PWR);
 }
 
 void LED_Driver::turnOnAllStatusLEDs()
 {
-  digitalWrite(LEDB, HIGH);
-  digitalWrite(LEDG, HIGH);
-  digitalWrite(LEDR, HIGH);
+  digitalWrite(LEDB, TURN_ON);
+  digitalWrite(LEDG, TURN_ON);
+  digitalWrite(LEDR, TURN_ON);
 }
 
 void LED_Driver::turnOffAllStatusLEDs()
 {
-  digitalWrite(LEDB, LOW);
-  digitalWrite(LEDG, LOW);
-  digitalWrite(LEDR, LOW);
+  digitalWrite(LEDB, TURN_OFF);
+  digitalWrite(LEDG, TURN_OFF);
+  digitalWrite(LEDR, TURN_OFF);
 }

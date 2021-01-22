@@ -35,9 +35,8 @@ void setup()
     // Indicate error occurred in initialization
     showmaster.errorShow();
   }
-  pinMode(D2, INPUT_PULLUP);
   showmaster.starUpShow();
-  showmaster.turnOnLED(showmaster.POWER_LED);
+  showmaster.turnOnPowerLED();
 }
 
 /*! \fn       void loop()
@@ -58,15 +57,13 @@ void loop()
     switch(SENSOR_STATUS)
     {
       case GarageDoorSensor::GarageDoorStatus::GARAGE_CLOSED:
-        showmaster.turnOnLED(showmaster.CLOSED_LED);
-        showmaster.turnOffLED(showmaster.OPEN_LED);
+        showmaster.setLEDStatus(showmaster.GARAGE_CLOSED_STATUS);
         #ifdef DEBUG_GARAGE_SENSOR
           Serial.print("Garage Closed == Turn on Blue LED\n\n");
         #endif
         break;
       case GarageDoorSensor::GarageDoorStatus::GARAGE_OPENED:
-        showmaster.turnOnLED(showmaster.OPEN_LED);
-        showmaster.turnOffLED(showmaster.CLOSED_LED);
+        showmaster.setLEDStatus(showmaster.GARAGE_OPENED_STATUS);
         #ifdef DEBUG_GARAGE_SENSOR
           Serial.print("Garage Opened == Turn on Green LED\n\n");
         #endif

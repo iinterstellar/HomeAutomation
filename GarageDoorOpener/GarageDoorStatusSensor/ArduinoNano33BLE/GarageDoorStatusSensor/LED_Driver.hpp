@@ -21,53 +21,56 @@ class LED_Driver
      */
     ~LED_Driver() = default;
 
-    /*! \enum     BoardLEDs
-     *  \brief    Specifies the available board LEDs for use
-     */
-    enum class BoardLEDs
-    {
-      LED_R,      /**< On board red LED */
-      LED_B,      /**< On board blue LED */
-      LED_G,      /**< On board green LED */
-      LED_P       /**< On board power LED */
-    };
-
     /*! \fn       void init_LEDs()
      *  \brief    Initializes the LED GPIO pins for output
      */
     void init_LEDs();
 
-    /*! \fn       void turnOnLED()
-     *  \brief    Turns on the specified LED
-     *  \param[in]    LED_name    LED name 
-     */
-    void turnOnLED(const BoardLEDs LED_name);
-
-    /*! \fn       void turnOffLED()
-     *  \brief    Turns off the specified LED
-     *  \param[in]    LED_name    LED name 
-     */
-    void turnOffLED(const BoardLEDs LED_name);
-
     /*! \fn       void turnOnAllLEDs()
-     *  \brief    Turns on all LEDs
+     *  \brief    Turns on all on board LEDs
+     *  \note     By default the RGB LEDs are set to create the color white
      */
     void turnOnAllLEDs();
 
     /*! \fn       void turnOffAllLEDs()
-     *  \brief    Turns off all LEDs
+     *  \brief    Turns off all on board LEDs
      */
     void turnOffAllLEDs();
 
-    /*! \fn       void turnOnAllStatusLEDs()
-     *  \brief    Turns on all LEDs except LED_P power LED
+    /*! \fn       void turnOnPowerLED()
+     *  \brief    Turns on the on board power LED
      */
-    void turnOnAllStatusLEDs();
+    void turnOnPowerLED();
 
-    /*! \fn       void turnOffAllStatusLEDs()
-     *  \brief    Turns off all LEDs except LED_P power LED
+    /*! \fn       void turnOffLED()
+     *  \brief    Turns off the on board power LED
      */
-    void turnOffAllStatusLEDs();
+    void turnOffPowerLED();
+
+    /*! \enum     LEDColors
+     *  \brief    Specifies possible color outputs using on board RGB LEDs (no PWM capability found for on board LEDs)
+     */
+    enum class LEDColors
+    {
+      Blue,
+      Cyan,
+      Green,
+      Magenta,
+      Red,
+      White,
+      Yellow
+    };
+
+    /*! \fn       void makeColor()
+     *  \brief    Combines the corresponding RGB LEDs to create the passed color selection
+     *  \param[in]    color       Color to make with RGB LEDs
+     */
+    void makeColor(const LEDColors color);
+    
+    /*! \fn       void turnOffRGBLED()
+     *  \brief    Turns off the on board RGB LEDs
+     */
+    void turnOffRGBLEDs();
 };
 
 #endif  //  LED_DRIVER_H

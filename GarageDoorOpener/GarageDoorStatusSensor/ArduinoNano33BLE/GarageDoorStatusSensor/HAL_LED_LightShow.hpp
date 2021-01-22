@@ -1,6 +1,6 @@
 /*! \file     HAL_LED_LightShow.hpp
  *  \brief    Hardware Abstraction Layer interface for on board LED Light shows
- *  \details  Implemented as a singleton and is thread safe
+ *  \details  Implemented as a singleton and is thread safe. All things "on board LED" happen through this interface
  */
 #ifndef HAL_LED_LIGHTSHOW_H
 #define HAL_LED_LIGHTSHOW_H
@@ -37,20 +37,29 @@ class LightShowController
     void init_LEDs();
 
     /*! \fn       void turnOnLED()
-     *  \brief    Turns on the specified LED
-     *  \param[in]    LED_name    LED name 
+     *  \brief    Turns on the on board power LED
      */
-    void turnOnLED(const LED_Driver::BoardLEDs LED_name);
+    void turnOnPowerLED();
 
     /*! \fn       void turnOffLED()
-     *  \brief    Turns off the specified LED
-     *  \param[in]    LED_name    LED name 
+     *  \brief    Turns off on board power LED
      */
-    void turnOffLED(const LED_Driver::BoardLEDs LED_name);
+    void turnOffPowerLED();
+
+    /*! \fn       void setLEDStatus(const LED_Driver::LEDColors status)
+     *  \brief    Sets the on board RGB LED to indicate the passed color status
+     *  \param[in]    status      LED color status to display on the on board RGB LEDs
+     */
+    void setLEDStatus(const LED_Driver::LEDColors status);
+
+    /*! \fn       void turnOffLED()
+     *  \brief    Turns off the on status LEDs (the RGB LEDs)
+     */
+    void turnOffStatusLEDs();
 
     /*! \fn       void starUpShow()
      *  \brief    Performs a startup LED light show
-     *  \note     This function calls thread sleep for a total of 13 seconds before returning
+     *  \note     This function calls thread sleep for a combined total of 5 seconds before returning
      */
     void starUpShow();
 
@@ -61,10 +70,10 @@ class LightShowController
     void errorShow();
   
   public:
-    const LED_Driver::BoardLEDs ERROR_LED = LED_Driver::BoardLEDs::LED_R;
-    const LED_Driver::BoardLEDs OPEN_LED = LED_Driver::BoardLEDs::LED_G;
-    const LED_Driver::BoardLEDs CLOSED_LED = LED_Driver::BoardLEDs::LED_B;
-    const LED_Driver::BoardLEDs POWER_LED = LED_Driver::BoardLEDs::LED_P;
+    // Note these LED status indicators all use the same on board RGB LED, so only one status can be displayed at a time
+    const LED_Driver::LEDColors ERROR_STATUS = LED_Driver::LEDColors::Red;
+    const LED_Driver::LEDColors GARAGE_OPENED_STATUS = LED_Driver::LEDColors::Green;
+    const LED_Driver::LEDColors GARAGE_CLOSED_STATUS = LED_Driver::LEDColors::Blue;
 
   private:
     /*! \fn       LightShowController()

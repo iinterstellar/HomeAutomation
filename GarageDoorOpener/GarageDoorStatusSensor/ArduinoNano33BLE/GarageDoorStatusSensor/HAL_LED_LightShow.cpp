@@ -8,6 +8,7 @@ namespace
 {
   using namespace std::chrono_literals;
   const rtos::Kernel::Clock::duration_u32 ONE_SECOND = 1000 * 1ms;
+  const rtos::Kernel::Clock::duration_u32 HALF_A_SECOND = 500 * 1ms;
   const rtos::Kernel::Clock::duration_u32 TWO_SECOND = 1000 * 2ms;
   const rtos::Kernel::Clock::duration_u32 STARTUPSHOW_DURATION = 10 * 1000 * 1ms;
 }
@@ -26,17 +27,31 @@ void LightShowController::init_LEDs()
   m_mutex.unlock();
 }
 
-void LightShowController::turnOnLED(const LED_Driver::BoardLEDs LED_name)
+void LightShowController::turnOnPowerLED()
 {
   m_mutex.lock();
-  m_driver.turnOnLED(LED_name);
+  m_driver.turnOnPowerLED();
   m_mutex.unlock();
 }
 
-void LightShowController::turnOffLED(const LED_Driver::BoardLEDs LED_name)
+void LightShowController::turnOffPowerLED()
 {
   m_mutex.lock();
-  m_driver.turnOffLED(LED_name);
+  m_driver.turnOffPowerLED();
+  m_mutex.unlock();
+}
+
+void LightShowController::setLEDStatus(const LED_Driver::LEDColors status)
+{
+  m_mutex.lock();
+  m_driver.makeColor(status);
+  m_mutex.unlock();
+}
+
+void LightShowController::turnOffStatusLEDs()
+{
+  m_mutex.lock();
+  m_driver.turnOffRGBLEDs();
   m_mutex.unlock();
 }
 
@@ -45,61 +60,47 @@ void LightShowController::starUpShow()
   m_mutex.lock();
   
   m_driver.turnOnAllLEDs();
-  rtos::ThisThread::sleep_for(ONE_SECOND);
+  rtos::ThisThread::sleep_for(HALF_A_SECOND);
 
-  m_driver.turnOffAllStatusLEDs();
-  rtos::ThisThread::sleep_for(ONE_SECOND);
+  m_driver.turnOffRGBLEDs();
+  rtos::ThisThread::sleep_for(HALF_A_SECOND);
 
-  m_driver.turnOnLED(ERROR_LED);
-  m_driver.turnOffLED(OPEN_LED);
-  m_driver.turnOffLED(CLOSED_LED);
-  rtos::ThisThread::sleep_for(ONE_SECOND);
+  m_driver.makeColor(LED_Driver::LEDColors::Red);
+  rtos::ThisThread::sleep_for(HALF_A_SECOND);
 
-  m_driver.turnOffLED(ERROR_LED);
-  m_driver.turnOnLED(OPEN_LED);
-  m_driver.turnOffLED(CLOSED_LED);
-  rtos::ThisThread::sleep_for(ONE_SECOND);
+  m_driver.makeColor(LED_Driver::LEDColors::Yellow);
+  rtos::ThisThread::sleep_for(HALF_A_SECOND);
 
-  m_driver.turnOnLED(ERROR_LED);
-  m_driver.turnOnLED(OPEN_LED);
-  m_driver.turnOffLED(CLOSED_LED);
-  rtos::ThisThread::sleep_for(ONE_SECOND);
+  m_driver.makeColor(LED_Driver::LEDColors::Green);
+  rtos::ThisThread::sleep_for(HALF_A_SECOND);
 
-  m_driver.turnOffLED(ERROR_LED);
-  m_driver.turnOffLED(OPEN_LED);
-  m_driver.turnOnLED(CLOSED_LED);
-  rtos::ThisThread::sleep_for(ONE_SECOND);
+  m_driver.makeColor(LED_Driver::LEDColors::Cyan);
+  rtos::ThisThread::sleep_for(HALF_A_SECOND);
 
-  m_driver.turnOnLED(ERROR_LED);
-  m_driver.turnOffLED(OPEN_LED);
-  m_driver.turnOnLED(CLOSED_LED);
-  rtos::ThisThread::sleep_for(ONE_SECOND);
+  m_driver.makeColor(LED_Driver::LEDColors::Blue);
+  rtos::ThisThread::sleep_for(HALF_A_SECOND);
 
-  m_driver.turnOffLED(ERROR_LED);
-  m_driver.turnOnLED(OPEN_LED);
-  m_driver.turnOnLED(CLOSED_LED);
-  rtos::ThisThread::sleep_for(ONE_SECOND);
+  m_driver.makeColor(LED_Driver::LEDColors::Magenta);
+  rtos::ThisThread::sleep_for(HALF_A_SECOND);  
 
-  m_driver.turnOnLED(ERROR_LED);
-  m_driver.turnOnLED(OPEN_LED);
-  m_driver.turnOnLED(CLOSED_LED);
-  rtos::ThisThread::sleep_for(ONE_SECOND);
+  m_driver.makeColor(LED_Driver::LEDColors::White);
+  rtos::ThisThread::sleep_for(HALF_A_SECOND);
 
   m_driver.turnOffAllLEDs();
-  rtos::ThisThread::sleep_for(ONE_SECOND);
+  rtos::ThisThread::sleep_for(HALF_A_SECOND);
 
   m_mutex.unlock();
 }
 
 void LightShowController::errorShow()
 {
-  static bool ERROR_LED_TOGGLE = true;
+  static bool error_led_toggle_flag = true;
 
   m_mutex.lock();
 
   // toggle the error LED
-  (ERROR_LED_TOGGLE) ? m_driver.turnOnLED(ERROR_LED) : m_driver.turnOffLED(ERROR_LED);
-  ERROR_LED_TOGGLE = !ERROR_LED_TOGGLE;
+  (error_led_toggle_flag) ? m_driver.makeColor(ERROR_STATUS) : m_driver.turnOffRGBLEDs();
+  error_led_toggle_flag = !error_led_toggle_flag;
   rtos::ThisThread::sleep_for(ONE_SECOND);
 
   m_mutex.unlock();
